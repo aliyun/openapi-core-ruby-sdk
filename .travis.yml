@@ -3,6 +3,6 @@ sudo: false
 notifications:
   email: false
 script:
-  - bundle exec rake
+  - rspec
 rvm:
   - 2.6
