@@ -12,6 +12,10 @@ Gem::Specification.new do |s|
     s.rubyforge_project  = "aliyunsdkcore"
     s.license            = "MIT"
     s.files              = ["lib/*.rb"]
-    s.test_files         = ["test/test_*.rb"]
+    s.test_files         = ["spec/*_spec.rb"]
     s.require_paths      = ["lib"]
+
+    s.add_development_dependency "simplecov"
+    s.add_development_dependency "rspec"
+    s.add_development_dependency "codecov", ">= 0.1.10"
 end
