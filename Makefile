@@ -1,7 +1,7 @@
 .PHONY: test install build deploy
 
 test:
-	rspec
+	rspec --format doc
 
 # deploy:
 # 	$(eval VERSION := $(shell cat lib/codecov.rb | grep 'VERSION = ' | cut -d\" -f2))

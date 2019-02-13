@@ -14,7 +14,4 @@ Gem::Specification.new do |s|
     s.files              = ["lib/*.rb"]
     s.test_files         = ["test/test_*.rb"]
     s.require_paths      = ["lib"]
-
-    s.add_development_dependency "rake"
-
 end

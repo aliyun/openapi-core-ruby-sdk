@@ -2,8 +2,8 @@
 require "hello"
 
 RSpec.describe do
-  describe '#add' do
-    it 'returns the sum of its arguments' do
+  describe 'hello' do
+    it 'returns Hello, Ruby.' do
       expect(hello).to eq("Hello, Ruby.")
     end
   end
