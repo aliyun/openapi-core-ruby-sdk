@@ -1,8 +1,9 @@
 lang: ruby
-sudo: false
-notifications:
-  email: false
-script:
-  - rspec
-rvm:
-  - 2.6
+
+script: rspec
+
+rvm: 2.6
+
+branches:
+  only:
+    - master
