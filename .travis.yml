@@ -1,6 +1,6 @@
 lang: ruby
 
-script: rspec
+script: bundle exec rspec
 
 rvm: 2.6
 
