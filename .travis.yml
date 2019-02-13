@@ -1,0 +1,8 @@
+lang: ruby
+sudo: false
+notifications:
+  email: false
+script:
+  - bundle exec rake
+rvm:
+  - 2.6
