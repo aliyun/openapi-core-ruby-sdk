@@ -47,7 +47,6 @@ class ROAClient
 
   def canonicalized_resource(uri, query_hash = {})
     query_string = query_hash.map { |key, value| "#{key}=#{value}" }.join('&')
-    puts query_string
     query_string.empty? ? uri : "#{uri}?#{query_string}"
   end
 
@@ -60,6 +59,7 @@ class ROAClient
   end
 
   def validate(config)
+    raise ArgumentError, 'must pass "config"' unless config
     raise ArgumentError, 'must pass "config[:endpoint]"' unless config[:endpoint]
     unless config[:endpoint].start_with?('http://') || config[:endpoint].start_with?('https://')
       raise ArgumentError, '"config.endpoint" must starts with \'https://\' or \'http://\'.'

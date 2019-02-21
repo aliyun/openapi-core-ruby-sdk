@@ -3,6 +3,12 @@ require 'roa_client'
 
 describe 'roa core' do
 
+  it 'should pass into "config"' do
+    expect {
+      ROAClient.new(nil)
+    }.to raise_error(ArgumentError, 'must pass "config"')
+  end
+
   it 'should pass into "config[:endpoint]"' do
     expect {
       ROAClient.new({})
