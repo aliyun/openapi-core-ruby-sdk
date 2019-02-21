@@ -1,10 +1,6 @@
-require 'json'
 require 'faraday'
-
-require 'base64'
-require 'openssl'
-
 require 'securerandom'
+require 'active_support/all'
 
 class ROAClient
 
@@ -28,20 +24,30 @@ class ROAClient
   end
 
   def request(method:, uri:, params: {}, body: {}, headers: {}, options: {})
+
+    mix_headers = default_headers.merge(headers).symbolize_keys!
+
     response = connection.send(method.downcase) do |request|
       request.url uri, params
       request.body = body.to_json unless body.nil? || body.empty?
-      headers.each { |key, value| request.headers[key] = value }
+      mix_headers.each { |key, value| request.headers[key] = value }
     end
+
     return response if options.has_key? :raw_body
-    if response.headers['content-type'].start_with?('application/json')
+
+    response_content_type = response.headers['Content-Type'] || ''
+    if response_content_type.start_with?('application/json')
       if response.status >= 400
         result = JSON.parse(response.body)
         raise StandardError, "code: #{response.status}, #{result['Message']} requestid: #{result['RequestId']}"
       end
     end
-    if response.headers['content-type'].start_with?('text/xml')
+
+    if response_content_type.start_with?('text/xml')
+      result = Hash.from_xml(response.body)
+      raise ACSError, result['Error'] if result['Error']
     end
+
     response
   end
 
@@ -129,10 +135,10 @@ class ROAClient
     attr_accessor :code
 
     def initialize(error)
-      self.code  = error[:code]
-      message    = error[:message]
-      host_id    = error[:host_id]
-      request_id = error[:request_id]
+      self.code    = error['Code']
+      message      = error['Message']
+      host_id      = error['HostId']
+      request_id   = error['RequestId']
       super("#{message} host_id: #{host_id}, request_id: #{request_id}")
     end
 
