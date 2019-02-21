@@ -1,5 +1,6 @@
 require 'rspec'
 require 'roa_client'
+require 'webmock/rspec'
 
 describe 'roa core' do
 
@@ -82,6 +83,49 @@ describe 'roa core' do
     expect(roa_client.headers[:accept]).to eq('application/json')
     expect(roa_client.headers[:date]).to match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/)
     expect(roa_client.headers[:host]).to eq('ecs.aliyuncs.com')
+  end
+
+  it 'request with raw body should ok' do
+    stub_request(:get, "https://ecs.aliyuncs.com/").to_return(body: 'raw body')
+    response = roa_client.request(method: 'GET', uri: '/', options: { raw_body: true })
+    expect(response.body).to eq('raw body')
+  end
+
+  it 'get request with raw body should ok' do
+    stub_request(:get, "https://ecs.aliyuncs.com/").to_return(body: 'raw body')
+    response = roa_client.get(uri: '/', options: { raw_body: true })
+    expect(response.body).to eq('raw body')
+  end
+
+  describe 'request with json response should ok' do
+    it 'json response should ok' do
+      stub_request(:get, "https://ecs.aliyuncs.com/")
+        .to_return(status: 200, headers: { 'Content-Type': 'application/json' }, body: { ok: true }.to_json)
+      response = roa_client.get(uri: '/')
+      expect(response.body).to eq({ ok: true }.to_json)
+    end
+  end
+
+  describe 'request(204) with json response should ok' do
+    it 'json response should ok' do
+      stub_request(:get, "https://ecs.aliyuncs.com/")
+        .to_return(status: 204, headers: { 'Content-Type': 'application/json' }, body: '')
+      response = roa_client.get(uri: '/')
+      expect(response.body).to eq('')
+    end
+  end
+
+  describe 'request(400) with json response should ok' do
+    let(:status) { 400 }
+    let(:headers) { { 'Content-Type': 'application/json' } }
+    let(:body) { { 'Message': 'error message', 'RequestId': 'requestid', 'Code': 'errorcode' }.to_json }
+    it 'json response should ok' do
+      stub_request(:get, "https://ecs.aliyuncs.com/")
+        .to_return(status: status, headers: headers, body: body)
+      expect {
+        roa_client.get(uri: '/')
+      }.to raise_error(StandardError, 'code: 400, error message requestid: requestid')
+    end
   end
 
   it 'signature should ok' do

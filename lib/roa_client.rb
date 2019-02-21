@@ -27,6 +27,44 @@ class ROAClient
 
   end
 
+  def request(method:, uri:, params: {}, body: {}, headers: {}, options: {})
+    response = connection.send(method.downcase) do |request|
+      request.url uri, params
+      request.body = body.to_json unless body.nil? || body.empty?
+      headers.each { |key, value| request.headers[key] = value }
+    end
+    return response if options.has_key? :raw_body
+    if response.headers['content-type'].start_with?('application/json')
+      if response.status >= 400
+        result = JSON.parse(response.body)
+        raise StandardError, "code: #{response.status}, #{result['Message']} requestid: #{result['RequestId']}"
+      end
+    end
+    if response.headers['content-type'].start_with?('text/xml')
+    end
+    response
+  end
+
+  def connection(adapter = Faraday.default_adapter)
+    Faraday.new(:url => self.endpoint) { |faraday| faraday.adapter adapter }
+  end
+
+  def get(uri: '', headers: {}, params: {}, options: {})
+    request(method: :get, uri: uri, params: params, body: {}, headers: headers, options: options)
+  end
+
+  def post(uri: '', headers: {}, params: {}, body: {}, options: {})
+    request(method: :get, uri: uri, params: params, body: body, headers: headers, options: options)
+  end
+
+  def put(uri: '', headers: {}, params: {}, body: {}, options: {})
+    request(method: :get, uri: uri, params: params, body: body, headers: headers, options: options)
+  end
+
+  def delete(uri: '', headers: {}, params: {}, options: {})
+    request(method: :get, uri: uri, params: params, body: {}, headers: headers, options: options)
+  end
+
   private
 
   def string_to_sign(method, uri, headers, query = {})
