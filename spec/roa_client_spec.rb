@@ -79,10 +79,39 @@ describe 'roa core' do
   end
 
   it 'default headers should ok' do
-    expect(roa_client.headers.keys).to match_array(default_header_keys)
-    expect(roa_client.headers[:accept]).to eq('application/json')
-    expect(roa_client.headers[:date]).to match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/)
-    expect(roa_client.headers[:host]).to eq('ecs.aliyuncs.com')
+    expect(roa_client.default_headers.keys).to match_array(default_header_keys)
+    expect(roa_client.default_headers[:accept]).to eq('application/json')
+    expect(roa_client.default_headers[:date]).to match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/)
+    expect(roa_client.default_headers[:host]).to eq('ecs.aliyuncs.com')
+  end
+
+  it 'default_headers should ok with security_token' do
+
+    roa_client = ROAClient.new(
+      endpoint:          'https://ecs.aliyuncs.com/',
+      api_version:       '1.0',
+      access_key_id:     'access_key_id',
+      access_key_secret: 'access_key_secret',
+      security_token:    'security_token'
+    )
+
+    default_header_keys = %w(
+      accept
+      date
+      host
+      x-acs-signature-nonce
+      x-acs-signature-method
+      x-acs-signature-version
+      x-acs-version
+      x-sdk-client
+      x-acs-accesskey-id
+      x-acs-security-token
+    ).map(&:to_sym)
+
+    expect(roa_client.default_headers[:accept]).to eq('application/json')
+    expect(roa_client.default_headers.keys).to match_array(default_header_keys)
+    expect(roa_client.default_headers[:date]).to match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/)
+    expect(roa_client.default_headers[:accept]).to eq('application/json')
   end
 
   it 'request with raw body should ok' do
