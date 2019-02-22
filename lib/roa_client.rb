@@ -4,11 +4,7 @@ require 'active_support/all'
 
 class ROAClient
 
-  # FIXME: 如何设置 keep_alive_timeout
-  attr_accessor :headers
   attr_accessor :endpoint, :api_version, :access_key_id, :access_key_secret, :security_token, :hostname, :opts
-
-  METHODS = [:GET, :POST, :PUT, :PATCH, :DELETE]
 
   def initialize(config)
 
@@ -18,8 +14,7 @@ class ROAClient
     self.api_version       = config[:api_version]
     self.access_key_id     = config[:access_key_id]
     self.access_key_secret = config[:access_key_secret]
-
-    self.headers = default_headers
+    self.security_token    = config[:security_token]
 
   end
 
@@ -29,7 +24,14 @@ class ROAClient
 
     response = connection.send(method.downcase) do |request|
       request.url uri, params
-      request.body = body.to_json unless body.nil? || body.empty?
+      if body.present?
+        request_body                  = body.to_json
+        request.body                  = request_body
+        mix_headers['content-md5']    = Digest::MD5.base64digest request_body
+        mix_headers['content-length'] = request_body.length.to_s
+      end
+      string_to_sign = string_to_sign(method, uri, mix_headers, params)
+      mix_headers.merge!(authorization: authorization(string_to_sign))
       mix_headers.each { |key, value| request.headers[key] = value }
     end
 
@@ -69,6 +71,23 @@ class ROAClient
 
   def delete(uri: '', headers: {}, params: {}, options: {})
     request(method: :get, uri: uri, params: params, body: {}, headers: headers, options: options)
+  end
+
+  def default_headers
+    default_headers = {
+      'accept':                  'application/json',
+      'date':                    Time.now.httpdate,
+      'host':                    URI(self.endpoint).host,
+      'x-acs-signature-nonce':   SecureRandom.hex(16),
+      'x-acs-signature-method':  'HMAC-SHA1',
+      'x-acs-signature-version': '1.0',
+      'x-acs-version':           self.api_version,
+      'x-sdk-client':            "RUBY(#{RUBY_VERSION})" # FIXME: 如何获取Gem的名称和版本号
+    }
+    if self.security_token
+      default_headers.merge!('x-acs-accesskey-id': self.access_key_id, 'x-acs-security-token': self.security_token)
+    end
+    default_headers
   end
 
   private
@@ -113,32 +132,15 @@ class ROAClient
     raise ArgumentError, 'must pass "config[:access_key_secret]"' unless config[:access_key_secret]
   end
 
-  def default_headers
-    default_headers = {
-      'accept':                  'application/json',
-      'date':                    Time.now.httpdate,
-      'host':                    URI(self.endpoint).host,
-      'x-acs-signature-nonce':   SecureRandom.hex(16),
-      'x-acs-signature-method':  'HMAC-SHA1',
-      'x-acs-signature-version': '1.0',
-      'x-acs-version':           self.api_version,
-      'x-sdk-client':            "RUBY(#{RUBY_VERSION})" # FIXME: 如何获取Gem的名称和版本号
-    }
-    if self.security_token
-      default_headers.merge!('x-acs-accesskey-id': self.access_key_id, 'x-acs-security-token': self.security_token)
-    end
-    default_headers
-  end
-
   class ACSError < StandardError
 
     attr_accessor :code
 
     def initialize(error)
-      self.code    = error['Code']
-      message      = error['Message']
-      host_id      = error['HostId']
-      request_id   = error['RequestId']
+      self.code  = error['Code']
+      message    = error['Message']
+      host_id    = error['HostId']
+      request_id = error['RequestId']
       super("#{message} host_id: #{host_id}, request_id: #{request_id}")
     end
 
