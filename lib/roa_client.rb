@@ -20,7 +20,7 @@ class ROAClient
 
   def request(method:, uri:, params: {}, body: {}, headers: {}, options: {})
 
-    mix_headers = default_headers.merge(headers).symbolize_keys!
+    mix_headers = default_headers.merge(headers)
 
     response = connection.send(method.downcase) do |request|
       request.url uri, params
@@ -93,9 +93,10 @@ class ROAClient
   private
 
   def string_to_sign(method, uri, headers, query = {})
+    headers.stringify_keys!
     header_string = [
       method,
-      headers[:accept],
+      headers['accept'],
       headers['content-md5'] || '',
       headers['content-type'] || '',
       headers['date'],
