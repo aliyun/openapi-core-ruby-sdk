@@ -1,9 +1,11 @@
 lang: ruby
 
-script: bundle exec rspec
-
 rvm: 2.6
 
 branches:
   only:
     - master
+
+script:
+  - bundle exec rspec --exclude-pattern spec/**/*_integration_spec.rb
+  - test -z $ACCESS_KEY_ID -a -z $ACCESS_KEY_SECRET || bundle exec rspec -P spec/**/*_integration_spec.rb
