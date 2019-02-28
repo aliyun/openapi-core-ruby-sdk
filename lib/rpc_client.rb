@@ -1,10 +1,11 @@
+require 'faraday'
 require 'active_support/all'
 
 class RPCClient
 
-  attr_accessor :endpoint, :api_version, :access_key_id, :access_key_secret, :security_token, :hostname, :codes, :opts
+  attr_accessor :endpoint, :api_version, :access_key_id, :access_key_secret, :security_token, :codes, :opts, :verbose
 
-  def initialize(config)
+  def initialize(config, verbose = false)
 
     validate config
 
@@ -14,7 +15,37 @@ class RPCClient
     self.access_key_secret = config[:access_key_secret]
     self.security_token    = config[:security_token]
     self.codes             = config[:codes]
+    self.opts              = config[:opts] || {}
+    self.verbose           = verbose.instance_of?(TrueClass) && verbose
+  end
 
+  def request(action:, params: {}, opts: {})
+    opts           = self.opts.merge(opts)
+    action         = action.upcase_first if opts[:format_action]
+    params         = format_params(params) if opts[:format_params]
+    defaults       = self.default_params
+    params         = { Action: action }.merge(defaults).merge(params)
+    method         = (opts[:method] || 'GET').upcase
+    normalized     = normalize(params)
+    canonicalized  = canonicalize(normalized)
+    string_to_sign = "#{method}&#{encode('/')}&#{encode(canonicalized)}"
+    key            = self.access_key_secret + '&'
+    signature      = Base64.encode64(OpenSSL::HMAC.digest('sha1', key, string_to_sign)).strip
+    normalized.push(['Signature', encode(signature)])
+
+    uri      = opts[:method] == 'POST' ? "/?#{canonicalize(normalized)}" : '/'
+    response = connection.send(method.downcase, uri) do |request|
+      if opts[:method] == 'POST'
+        request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        request.body                    = canonicalize(normalized)
+      end
+    end
+
+    response
+  end
+
+  def connection(adapter = Faraday.default_adapter)
+    Faraday.new(:url => self.endpoint) { |faraday| faraday.adapter adapter }
   end
 
   def default_params

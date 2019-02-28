@@ -99,6 +99,65 @@ describe 'rpc core' do
     expect(rpc_client.default_params.stringify_keys.keys).to match_array default_params_keys
   end
 
+  describe 'request' do
+    it 'get with raw body should ok' do
+      rpc_client = RPCClient.new(
+        endpoint:          'https://ecs.aliyuncs.com/',
+        api_version:       '1.0',
+        access_key_id:     'access_key_id',
+        access_key_secret: 'access_key_secret',
+      )
+      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
+    end
+  end
+
+  describe 'request with post' do
+
+    let(:rpc_client) do
+      RPCClient.new(
+        endpoint:          'https://ecs.aliyuncs.com/',
+        api_version:       '1.0',
+        access_key_id:     'access_key_id',
+        access_key_secret: 'access_key_secret',
+        security_token:    'security_token'
+      )
+    end
+
+    it 'should ok' do
+      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
+    end
+
+    it 'should ok with format_action' do
+      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      response = rpc_client.request(action: 'action', opts: { format_action: false })
+      expect(response.body).to eq({}.to_json)
+    end
+
+    it 'should ok with format_params' do
+      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      response = rpc_client.request(action: 'action', opts: { format_params: false })
+      expect(response.body).to eq({}.to_json)
+    end
+
+    it 'get with raw body should ok' do
+      stub_request(:post, /^https:\/\/ecs.aliyuncs.com\/[\s\S]/).to_return(status: 200, body: {}.to_json)
+      response = rpc_client.request(action: 'action', opts: { method: 'POST' })
+      expect(response.body).to eq({}.to_json)
+    end
+
+    it 'get with verbose should ok' do
+      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      response = rpc_client.request(action: 'action')
+      expect(response.body).to eq({}.to_json)
+    end
+  end
+
+  describe 'request with error' do
+
+  end
+
   describe 'RPC private methods' do
 
     let(:rpc_client) do
