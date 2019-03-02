@@ -69,7 +69,7 @@ describe 'rpc core' do
         access_key_secret: 'access_key_secret',
         codes:             ['True']
       )
-      expect(rpc_client.codes).to match_array ['True']
+      expect(rpc_client.codes.include? 'True').to be true
     end
   end
 
@@ -83,7 +83,7 @@ describe 'rpc core' do
         access_key_secret: 'access_key_secret',
       )
       default_params_keys = %w(Format SignatureMethod SignatureNonce SignatureVersion Timestamp AccessKeyId Version)
-      expect(rpc_client.default_params.stringify_keys.keys).to match_array default_params_keys
+      expect(rpc_client.send(:default_params).stringify_keys.keys).to match_array default_params_keys
     end
   end
 
@@ -96,7 +96,7 @@ describe 'rpc core' do
       security_token:    'security_token'
     )
     default_params_keys = %w(Format SignatureMethod SignatureNonce SignatureVersion Timestamp AccessKeyId Version SecurityToken)
-    expect(rpc_client.default_params.stringify_keys.keys).to match_array default_params_keys
+    expect(rpc_client.send(:default_params).stringify_keys.keys).to match_array default_params_keys
   end
 
   describe 'request' do
@@ -107,7 +107,7 @@ describe 'rpc core' do
         access_key_id:     'access_key_id',
         access_key_secret: 'access_key_secret',
       )
-      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
     end
   end
@@ -125,37 +125,55 @@ describe 'rpc core' do
     end
 
     it 'should ok' do
-      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
     end
 
     it 'should ok with format_action' do
-      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { format_action: false })
       expect(response.body).to eq({}.to_json)
     end
 
     it 'should ok with format_params' do
-      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { format_params: false })
       expect(response.body).to eq({}.to_json)
     end
 
     it 'get with raw body should ok' do
-      stub_request(:post, /^https:\/\/ecs.aliyuncs.com\/[\s\S]/).to_return(status: 200, body: {}.to_json)
+      stub_request(:post, "https://ecs.aliyuncs.com").to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { method: 'POST' })
       expect(response.body).to eq({}.to_json)
     end
 
     it 'get with verbose should ok' do
-      stub_request(:get, "https://ecs.aliyuncs.com/").to_return(status: 200, body: {}.to_json)
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action')
+      expect(response.status).to eq 200
+      expect(response.success?).to be true
       expect(response.body).to eq({}.to_json)
     end
   end
 
   describe 'request with error' do
 
+    let(:rpc_client) do
+      RPCClient.new(
+        endpoint:          'https://ecs.aliyuncs.com/',
+        api_version:       '1.0',
+        access_key_id:     'access_key_id',
+        access_key_secret: 'access_key_secret',
+      )
+    end
+
+    it 'request with 400 should ok' do
+      mock_response = { Code: 400, Message: 'error message' }.to_json
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 400, body: mock_response)
+      expect {
+        rpc_client.request(action: 'action')
+      }.to raise_error(StandardError, /error message, URL:/)
+    end
   end
 
   describe 'RPC private methods' do
