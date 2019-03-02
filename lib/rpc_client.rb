@@ -14,16 +14,17 @@ class RPCClient
     self.access_key_id     = config[:access_key_id]
     self.access_key_secret = config[:access_key_secret]
     self.security_token    = config[:security_token]
-    self.codes             = config[:codes]
     self.opts              = config[:opts] || {}
     self.verbose           = verbose.instance_of?(TrueClass) && verbose
+    self.codes             = [200, '200', 'OK', 'Success']
+    self.codes.push(config[:codes]).flatten! if config[:codes]
   end
 
   def request(action:, params: {}, opts: {})
     opts           = self.opts.merge(opts)
     action         = action.upcase_first if opts[:format_action]
-    params         = format_params(params) if opts[:format_params]
-    defaults       = self.default_params
+    params         = format_params(params) unless opts[:format_params]
+    defaults       = default_params
     params         = { Action: action }.merge(defaults).merge(params)
     method         = (opts[:method] || 'GET').upcase
     normalized     = normalize(params)
@@ -33,16 +34,21 @@ class RPCClient
     signature      = Base64.encode64(OpenSSL::HMAC.digest('sha1', key, string_to_sign)).strip
     normalized.push(['Signature', encode(signature)])
 
-    uri      = opts[:method] == 'POST' ? "/?#{canonicalize(normalized)}" : '/'
-    response = connection.send(method.downcase, uri) do |request|
+    uri           = opts[:method] == 'POST' ? '/' : "/?#{canonicalize(normalized)}"
+    response      = connection.send(method.downcase, uri) do |request|
       if opts[:method] == 'POST'
         request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         request.body                    = canonicalize(normalized)
       end
     end
-
+    response_body = JSON.parse(response.body)
+    if response_body['Code'] && !self.codes.include?(response_body['Code'])
+      raise StandardError, "#{response_body['Message']}, URL: #{uri}"
+    end
     response
   end
+
+  private
 
   def connection(adapter = Faraday.default_adapter)
     Faraday.new(:url => self.endpoint) { |faraday| faraday.adapter adapter }
@@ -54,15 +60,13 @@ class RPCClient
       :SignatureMethod  => 'HMAC-SHA1',
       :SignatureNonce   => SecureRandom.hex(16),
       :SignatureVersion => '1.0',
-      :Timestamp        => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ'),
+      :Timestamp        => Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
       :AccessKeyId      => self.access_key_id,
       :Version          => self.api_version,
     }
     default_params.merge!(SecurityToken: self.security_token) if self.security_token
     default_params
   end
-
-  private
 
   def encode(string)
     CGI.escape string
@@ -105,7 +109,7 @@ class RPCClient
   end
 
   def canonicalize(normalized)
-    URI.encode_www_form normalized
+    normalized.map { |element| "#{element.first}=#{element.last}" }.join('&')
   end
 
   def validate(config)
