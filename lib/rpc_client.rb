@@ -1,3 +1,4 @@
+require 'set'
 require 'faraday'
 require 'active_support/all'
 
@@ -17,7 +18,7 @@ class RPCClient
     self.opts              = config[:opts] || {}
     self.verbose           = verbose.instance_of?(TrueClass) && verbose
     self.codes             = [200, '200', 'OK', 'Success']
-    self.codes.push(config[:codes]).flatten! if config[:codes]
+    self.codes             = Set.new(codes.push(config[:codes]).flatten!) if config[:codes]
   end
 
   def request(action:, params: {}, opts: {})
