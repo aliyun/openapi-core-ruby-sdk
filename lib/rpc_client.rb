@@ -17,8 +17,8 @@ class RPCClient
     self.security_token    = config[:security_token]
     self.opts              = config[:opts] || {}
     self.verbose           = verbose.instance_of?(TrueClass) && verbose
-    self.codes             = [200, '200', 'OK', 'Success']
-    self.codes             = Set.new(codes.push(config[:codes]).flatten!) if config[:codes]
+    self.codes             = Set.new [200, '200', 'OK', 'Success']
+    self.codes.merge config[:codes] if config[:codes]
   end
 
   def request(action:, params: {}, opts: {})
