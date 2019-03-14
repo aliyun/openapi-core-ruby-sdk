@@ -1,0 +1,34 @@
+version: 1.0.{build}-{branch}
+
+image: Visual Studio 2017
+
+skip_tags: true
+
+skip_commits:
+  message: /Created.*\.(png|jpg|jpeg|bmp|gif)/
+
+environment:
+  matrix:
+    - RUBY_VERSION: ”26-x64“
+    - RUBY_VERSION: ”25-x64“
+    - RUBY_VERSION: ”24-x64“
+    - RUBY_VERSION: ”23-x64“
+    
+cache:
+  - vendor/bundle
+
+branches:
+  only:
+    - master
+
+install:
+  - cmd: set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
+  - cmd: gem install bundler
+  - cmd: gem install rspec
+
+build_script:
+  - cmd: bundle install --path=vendor/bundle
+
+test_script:
+  - bundle exec rspec --pattern spec/**/*_client_spec.rb
+  - IF DEFINED ACCESS_KEY_ID (bundle exec rspec -P spec/**/*_integration_spec.rb)
