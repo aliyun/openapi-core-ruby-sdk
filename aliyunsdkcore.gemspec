@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.test_files         = `git ls-files -z spec`.split("\0")
   s.require_paths      = ["lib"]
 
+  s.add_dependency 'faraday', '~> 0.15.4'
+
   s.add_development_dependency "simplecov"
   s.add_development_dependency "rspec"
   s.add_development_dependency "codecov", ">= 0.1.10"

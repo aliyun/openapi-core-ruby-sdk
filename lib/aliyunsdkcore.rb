@@ -1,6 +1,6 @@
-require './rpc_client.rb'
-require './roa_client.rb'
+require_relative './rpc_client'
+require_relative './roa_client'
 
 module AliyunSDKCore
-  VERSION = "0.0.2"
+  VERSION = "0.0.3"
 end
