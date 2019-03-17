@@ -10,3 +10,60 @@ The Alibaba Cloud Ruby Software Development Kit (SDK) allows you to access Aliba
 This document introduces how to install and use Alibaba Cloud Ruby SDK.
 
 If you have any problem while using Ruby SDK, please submit an issue.
+
+## Installation
+
+```sh
+$ gem install aliyunsdkcore
+```
+
+## Usage
+
+The RPC demo:
+
+```ruby
+require 'aliyunsdkcore'
+
+client = RPCClient.new(
+  endpoint:          'http://ros.aliyuncs.com',
+  api_version:       '2015-09-01',
+  access_key_id:     ENV['ACCESS_KEY_ID'],
+  access_key_secret: ENV['ACCESS_KEY_SECRET'],
+)
+
+params         = { key: (1..11).to_a.map(&:to_s) }
+request_option = { method: 'POST', timeout: 15000 }
+response       = client.request(
+  action: 'DescribeRegions',
+  params: params,
+  opts: request_option
+)
+
+print JSON.parse(response.body)
+```
+
+
+The ROA demo:
+
+```ruby
+require 'aliyunsdkcore'
+
+client = ROAClient.new(
+  endpoint:          'http://ros.aliyuncs.com',
+  api_version:       '2015-09-01',
+  access_key_id:     ENV['ACCESS_KEY_ID'],
+  access_key_secret: ENV['ACCESS_KEY_SECRET'],
+)
+
+response = client.request(
+  method: 'GET',
+  uri: '/regions',
+  options: {
+    timeout: 15000
+  }
+)
+
+print JSON.parse(response.body)
+```
+
+## License
