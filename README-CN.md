@@ -5,7 +5,7 @@
 <a href=" https://www.alibabacloud.com"><img src="https://aliyunsdk-pages.alicdn.com/icons/Aliyun.svg"></a>
 </p>
 
-<h1 align="center">Alibaba Cloud SDK for Ruby(开发中)</h1>
+<h1 align="center">Alibaba Cloud Core SDK for Ruby(开发中)</h1>
 
 <p align="center">
 <a href="https://badge.fury.io/rb/aliyunsdkcore"><img src="https://badge.fury.io/rb/aliyunsdkcore.svg" alt="Gem Version"></a>
@@ -15,9 +15,9 @@
 </p>
 
 
-Alibaba Cloud SDK for Ruby 支持 Ruby 开发者轻松访问阿里云服务，例如：弹性云主机（ECS）、负载均衡（SLB）、云监控（CloudMonitor）等。 您无需处理API相关业务（如签名和构建请求）即可访问阿里云服务。
+Alibaba Cloud Core SDK for Ruby 支持 Ruby 开发者轻松访问阿里云服务，例如：弹性云主机（ECS）、负载均衡（SLB）、云监控（CloudMonitor）等。 您无需处理API相关业务（如签名和构建请求）即可访问阿里云服务。
 
-本文档介绍如何安装和使用 Alibaba Cloud SDK for Ruby。
+本文档介绍如何安装和使用 Alibaba Cloud Core SDK for Ruby。
 
 ## 安装
 
