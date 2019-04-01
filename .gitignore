@@ -1,3 +1,5 @@
 coverage
 Gemfile.lock
 *.gem
+/openapi-core-ruby-sdk.iml
+.idea

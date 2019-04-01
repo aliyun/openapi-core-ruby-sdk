@@ -1,11 +1,11 @@
-English | [简体中文](./README-CN.md)
+[English](./README.md) | 简体中文
 
 
 <p align="center">
-<a href=" https://www.alibabacloud.com"><img src="https://aliyunsdk-pages.alicdn.com/icons/AlibabaCloud.svg"></a>
+<a href=" https://www.alibabacloud.com"><img src="https://aliyunsdk-pages.alicdn.com/icons/Aliyun.svg"></a>
 </p>
 
-<h1 align="center">Alibaba Cloud SDK for Ruby(Working in progress)</h1>
+<h1 align="center">Alibaba Cloud SDK for Ruby(开发中)</h1>
 
 <p align="center">
 <a href="https://badge.fury.io/rb/aliyunsdkcore"><img src="https://badge.fury.io/rb/aliyunsdkcore.svg" alt="Gem Version"></a>
@@ -15,19 +15,19 @@ English | [简体中文](./README-CN.md)
 </p>
 
 
-Alibaba Cloud SDK for Ruby allows you to access Alibaba Cloud services such as Elastic Compute Service (ECS), Server Load Balancer (SLB), and CloudMonitor. You can access Alibaba Cloud services without the need to handle API related tasks, such as signing and constructing your requests.
+Alibaba Cloud SDK for Ruby 支持 Ruby 开发者轻松访问阿里云服务，例如：弹性云主机（ECS）、负载均衡（SLB）、云监控（CloudMonitor）等。 您无需处理API相关业务（如签名和构建请求）即可访问阿里云服务。
 
-This document introduces how to install and use Alibaba Cloud SDK for Ruby.
+本文档介绍如何安装和使用 Alibaba Cloud SDK for Ruby。
 
-## Installation
+## 安装
 
 ```sh
 $ gem install aliyunsdkcore
 ```
 
-## Usage
+## 使用
 
-The RPC demo:
+RPC 示例；
 
 ```ruby
 require 'aliyunsdkcore'
@@ -51,7 +51,7 @@ print JSON.parse(response.body)
 ```
 
 
-The ROA demo:
+ROA 示例：
 
 ```ruby
 require 'aliyunsdkcore'
@@ -74,20 +74,19 @@ response = client.request(
 print JSON.parse(response.body)
 ```
 
-
-## Issues
-[Opening an Issue](https://github.com/aliyun/openapi-core-ruby-sdk/issues/new/choose), Issues not conforming to the guidelines may be closed immediately.
-
-
-## Changelog
-Detailed changes for each release are documented in the [release notes](CHANGELOG.md).
+## 问题
+[提交 Issue](https://github.com/aliyun/openapi-core-ruby-sdk/issues/new/choose)，不符合指南的问题可能会立即关闭。
 
 
-## Contribution
-Please make sure to read the [Contributing Guide](CONTRIBUTING.md) before making a pull request.
+## 发行说明
+每个版本的详细更改记录在[发行说明](CHANGELOG.md)中。
 
 
-## License
+## 贡献
+提交 Pull Request 之前请阅读[贡献指南](CONTRIBUTING.md)。
+
+
+## 许可证
 [MIT](LICENSE.md)
 
-Copyright 1999-2019 Alibaba Group Holding Ltd.
+版权所有 1999-2019 阿里巴巴集团
