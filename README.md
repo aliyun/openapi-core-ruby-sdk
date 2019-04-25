@@ -33,8 +33,8 @@ The RPC demo:
 require 'aliyunsdkcore'
 
 client = RPCClient.new(
-  endpoint:          'http://ros.aliyuncs.com',
-  api_version:       '2015-09-01',
+  endpoint:          'https://ecs.aliyuncs.com',
+  api_version:       '2014-05-26',
   access_key_id:     ENV['ACCESS_KEY_ID'],
   access_key_secret: ENV['ACCESS_KEY_SECRET'],
 )
