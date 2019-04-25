@@ -5,7 +5,7 @@ test:
 
 deploy:
 	$(eval VERSION := $(shell cat lib/aliyunsdkcore.rb | grep 'VERSION = ' | cut -d\" -f2))
-	git tag v$(VERSION) -m ""
+	git release v$(VERSION) -m ""
 	git push origin v$(VERSION)
 	gem build aliyunsdkcore.gemspec
 	gem push aliyunsdkcore-$(VERSION).gem
