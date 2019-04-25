@@ -5,7 +5,7 @@
 <a href=" https://www.alibabacloud.com"><img src="https://aliyunsdk-pages.alicdn.com/icons/Aliyun.svg"></a>
 </p>
 
-<h1 align="center">Alibaba Cloud Core SDK for Ruby(开发中)</h1>
+<h1 align="center">Alibaba Cloud Core SDK for Ruby</h1>
 
 <p align="center">
 <a href="https://badge.fury.io/rb/aliyunsdkcore"><img src="https://badge.fury.io/rb/aliyunsdkcore.svg" alt="Gem Version"></a>

@@ -5,7 +5,7 @@ English | [简体中文](./README-CN.md)
 <a href=" https://www.alibabacloud.com"><img src="https://aliyunsdk-pages.alicdn.com/icons/AlibabaCloud.svg"></a>
 </p>
 
-<h1 align="center">Alibaba Cloud Core SDK for Ruby(Working in progress)</h1>
+<h1 align="center">Alibaba Cloud Core SDK for Ruby</h1>
 
 <p align="center">
 <a href="https://badge.fury.io/rb/aliyunsdkcore"><img src="https://badge.fury.io/rb/aliyunsdkcore.svg" alt="Gem Version"></a>
