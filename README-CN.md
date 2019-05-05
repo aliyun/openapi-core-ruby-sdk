@@ -47,7 +47,7 @@ response       = client.request(
   opts: request_option
 )
 
-print JSON.parse(response.body)
+print response
 ```
 
 
@@ -71,7 +71,7 @@ response = client.request(
   }
 )
 
-print JSON.parse(response.body)
+print response.body
 ```
 
 ## 问题

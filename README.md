@@ -47,9 +47,8 @@ response       = client.request(
   opts: request_option
 )
 
-print JSON.parse(response.body)
+print response
 ```
-
 
 The ROA demo:
 
@@ -71,9 +70,8 @@ response = client.request(
   }
 )
 
-print JSON.parse(response.body)
+print response.body
 ```
-
 
 ## Issues
 [Opening an Issue](https://github.com/aliyun/openapi-core-ruby-sdk/issues/new/choose), Issues not conforming to the guidelines may be closed immediately.
