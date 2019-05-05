@@ -83,7 +83,7 @@ describe 'rpc core' do
         access_key_secret: 'access_key_secret',
       )
       default_params_keys = %w(Format SignatureMethod SignatureNonce SignatureVersion Timestamp AccessKeyId Version)
-      expect(rpc_client.send(:default_params).stringify_keys.keys).to match_array default_params_keys
+      expect(rpc_client.send(:default_params).keys).to match_array default_params_keys
     end
   end
 
@@ -96,7 +96,7 @@ describe 'rpc core' do
       security_token:    'security_token'
     )
     default_params_keys = %w(Format SignatureMethod SignatureNonce SignatureVersion Timestamp AccessKeyId Version SecurityToken)
-    expect(rpc_client.send(:default_params).stringify_keys.keys).to match_array default_params_keys
+    expect(rpc_client.send(:default_params).keys).to match_array default_params_keys
   end
 
   describe 'request' do
@@ -201,7 +201,7 @@ describe 'rpc core' do
     it 'flat_params should ok' do
       expect(rpc_client.send(:flat_params, {})).to eq({})
       expect(rpc_client.send(:flat_params, { key: ['value'] })).to eq({ 'key.1' => 'value' })
-      expect(rpc_client.send(:flat_params, { key: 'value' })).to eq({ key: 'value' })
+      expect(rpc_client.send(:flat_params, { key: 'value' })).to eq({ 'key' => 'value' })
       expect(rpc_client.send(:flat_params, { key: [{ Domain: '1.com' }] })).to eq({ 'key.1.Domain' => '1.com' })
     end
 

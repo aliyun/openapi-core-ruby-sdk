@@ -3,6 +3,15 @@ require 'openssl'
 require 'faraday'
 require 'active_support/all'
 
+# Converts just the first character to uppercase.
+#
+#   upcase_first('what a Lovely Day') # => "What a Lovely Day"
+#   upcase_first('w')                 # => "W"
+#   upcase_first('')                  # => ""
+def upcase_first(string)
+  string.length > 0 ? string[0].upcase.concat(string[1..-1]) : ""
+end
+
 class RPCClient
 
   attr_accessor :endpoint, :api_version, :access_key_id, :access_key_secret, :security_token, :codes, :opts, :verbose
@@ -24,7 +33,7 @@ class RPCClient
 
   def request(action:, params: {}, opts: {})
     opts           = self.opts.merge(opts)
-    action         = action.upcase_first if opts[:format_action]
+    action         = upcase_first(action) if opts[:format_action]
     params         = format_params(params) unless opts[:format_params]
     defaults       = default_params
     params         = { Action: action }.merge(defaults).merge(params)
@@ -63,15 +72,15 @@ class RPCClient
 
   def default_params
     default_params = {
-      :Format           => 'JSON',
-      :SignatureMethod  => 'HMAC-SHA1',
-      :SignatureNonce   => SecureRandom.hex(16),
-      :SignatureVersion => '1.0',
-      :Timestamp        => Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
-      :AccessKeyId      => self.access_key_id,
-      :Version          => self.api_version,
+      'Format'           => 'JSON',
+      'SignatureMethod'  => 'HMAC-SHA1',
+      'SignatureNonce'   => SecureRandom.hex(16),
+      'SignatureVersion' => '1.0',
+      'Timestamp'        => Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
+      'AccessKeyId'      => self.access_key_id,
+      'Version'          => self.api_version,
     }
-    default_params.merge!(SecurityToken: self.security_token) if self.security_token
+    default_params.merge!('SecurityToken' => self.security_token) if self.security_token
     default_params
   end
 
@@ -81,7 +90,7 @@ class RPCClient
   end
 
   def format_params(param_hash)
-    param_hash.keys.each { |key| param_hash[key.to_s.upcase_first.to_sym] = param_hash.delete key }
+    param_hash.keys.each { |key| param_hash[upcase_first(key.to_s).to_sym] = param_hash.delete key }
     param_hash
   end
 
@@ -102,7 +111,7 @@ class RPCClient
       if value.instance_of?(Array)
         replace_repeat_list(target, key, value)
       else
-        target[key] = value
+        target[key.to_s] = value
       end
     end
     target
@@ -110,7 +119,6 @@ class RPCClient
 
   def normalize(params)
     flat_params(params)
-      .stringify_keys
       .sort
       .to_h
       .map { |key, value| [encode(key), encode(value)] }
