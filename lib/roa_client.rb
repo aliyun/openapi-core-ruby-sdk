@@ -2,6 +2,10 @@ require 'faraday'
 require 'securerandom'
 require 'active_support/all'
 
+def present?(obj)
+  obj.respond_to?(:empty?) ? !obj.empty? : obj
+end
+
 class ROAClient
 
   attr_accessor :endpoint, :api_version, :access_key_id, :access_key_secret, :security_token, :hostname, :opts
@@ -24,7 +28,7 @@ class ROAClient
 
     response = connection.send(method.downcase) do |request|
       request.url uri, params
-      if body.present?
+      if present?(body)
         request_body                  = body.to_json
         request.body                  = request_body
         mix_headers['content-md5']    = Digest::MD5.base64digest request_body
@@ -93,7 +97,6 @@ class ROAClient
   private
 
   def string_to_sign(method, uri, headers, query = {})
-    headers.stringify_keys!
     header_string = [
       method,
       headers['accept'],

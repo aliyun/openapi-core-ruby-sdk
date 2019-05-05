@@ -114,18 +114,6 @@ describe 'roa core' do
     expect(roa_client.default_headers[:accept]).to eq('application/json')
   end
 
-  it 'request with raw body should ok' do
-    stub_request(:get, "https://ecs.aliyuncs.com/").to_return(body: 'raw body')
-    response = roa_client.request(method: 'GET', uri: '/', options: { raw_body: true })
-    expect(response.body).to eq('raw body')
-  end
-
-  it 'get request with raw body should ok' do
-    stub_request(:get, "https://ecs.aliyuncs.com/").to_return(body: 'raw body')
-    response = roa_client.get(uri: '/', options: { raw_body: true })
-    expect(response.body).to eq('raw body')
-  end
-
   describe 'request with json response should ok' do
     it 'json response should ok' do
       stub_request(:get, "https://ecs.aliyuncs.com/")
@@ -263,7 +251,7 @@ describe 'roa core' do
 
   it 'string_to_sign should ok ' do
     expect(
-      roa_client.send(:string_to_sign, 'GET', '/', { accept: 'application/json' })
+      roa_client.send(:string_to_sign, 'GET', '/', { 'accept' => 'application/json' })
     ).to eq("GET\napplication/json\n\n\n\n/")
   end
 
@@ -271,12 +259,12 @@ describe 'roa core' do
     it 'ACSError should ok' do
       expect {
         error_info = {
-          Message:   'error message',
-          Code:      'errorcode',
-          HostId:    'hostid',
-          RequestId: 'requestid',
+          'Message' =>   'error message',
+          'Code' =>     'errorcode',
+          'HostId' =>    'hostid',
+          'RequestId' => 'requestid',
         }
-        raise ROAClient::ACSError, error_info.stringify_keys!
+        raise ROAClient::ACSError, error_info
       }.to raise_error(ROAClient::ACSError, 'error message host_id: hostid, request_id: requestid')
     end
   end
