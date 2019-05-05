@@ -36,18 +36,23 @@ class RPCClient
     signature      = Base64.encode64(OpenSSL::HMAC.digest('sha1', key, string_to_sign)).strip
     normalized.push(['Signature', encode(signature)])
 
-    uri           = opts[:method] == 'POST' ? '/' : "/?#{canonicalize(normalized)}"
+    querystring = canonicalize(normalized)
+
+    uri           = opts[:method] == 'POST' ? '/' : "/?#{querystring}"
+
     response      = connection.send(method.downcase, uri) do |request|
       if opts[:method] == 'POST'
         request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-        request.body                    = canonicalize(normalized)
+        request.body                    = querystring
       end
     end
+
     response_body = JSON.parse(response.body)
     if response_body['Code'] && !self.codes.include?(response_body['Code'])
       raise StandardError, "#{response_body['Message']}, URL: #{uri}"
     end
-    response
+
+    response_body
   end
 
   private
@@ -71,7 +76,8 @@ class RPCClient
   end
 
   def encode(string)
-    CGI.escape string
+    encoded = CGI.escape string
+    encoded.gsub(/[\+]/, '%20')
   end
 
   def format_params(param_hash)

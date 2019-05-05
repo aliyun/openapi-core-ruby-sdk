@@ -19,17 +19,24 @@ describe 'rpc request' do
     params         = { key: (1..11).to_a.map(&:to_s) }
     request_option = { method: 'POST', timeout: 15000 }
     response       = rpc_client.request(action: 'DescribeRegions', params: params, opts: request_option)
-    response_body  = JSON.parse(response.body)
-    expect(response_body.keys.include?('Regions')).to be true
-    expect(response_body.keys.include?('RequestId')).to be true
+    expect(response.keys.include?('Regions')).to be true
+    expect(response.keys.include?('RequestId')).to be true
   end
 
   it 'should ok with repeat list less 10 item' do
     params         = { key: (1..9).to_a.map(&:to_s) }
     request_option = { method: 'POST', timeout: 15000 }
     response       = rpc_client.request(action: 'DescribeRegions', params: params, opts: request_option)
-    response_body  = JSON.parse(response.body)
-    expect(response_body.keys.include?('Regions')).to be true
-    expect(response_body.keys.include?('RequestId')).to be true
+    expect(response.keys.include?('Regions')).to be true
+    expect(response.keys.include?('RequestId')).to be true
   end
+
+  it 'should ok with space' do
+    params         = { key: 'the string with spaces' }
+    request_option = { method: 'POST', timeout: 15000 }
+    response       = rpc_client.request(action: 'DescribeRegions', params: params, opts: request_option)
+    expect(response.keys.include?('Regions')).to be true
+    expect(response.keys.include?('RequestId')).to be true
+  end
+
 end

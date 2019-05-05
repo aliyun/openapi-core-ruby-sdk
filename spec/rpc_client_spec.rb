@@ -108,7 +108,7 @@ describe 'rpc core' do
         access_key_secret: 'access_key_secret',
       )
       stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
-      expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
+      expect(rpc_client.request(action: 'action')).to eql({})
     end
   end
 
@@ -126,33 +126,25 @@ describe 'rpc core' do
 
     it 'should ok' do
       stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
-      expect(rpc_client.request(action: 'action').body).to eq({}.to_json)
+      expect(rpc_client.request(action: 'action')).to eql({})
     end
 
     it 'should ok with format_action' do
       stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { format_action: false })
-      expect(response.body).to eq({}.to_json)
+      expect(response).to eql({})
     end
 
     it 'should ok with format_params' do
       stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { format_params: false })
-      expect(response.body).to eq({}.to_json)
+      expect(response).to eql({})
     end
 
     it 'get with raw body should ok' do
       stub_request(:post, "https://ecs.aliyuncs.com").to_return(status: 200, body: {}.to_json)
       response = rpc_client.request(action: 'action', opts: { method: 'POST' })
-      expect(response.body).to eq({}.to_json)
-    end
-
-    it 'get with verbose should ok' do
-      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: {}.to_json)
-      response = rpc_client.request(action: 'action')
-      expect(response.status).to eq 200
-      expect(response.success?).to be true
-      expect(response.body).to eq({}.to_json)
+      expect(response).to eql({})
     end
   end
 
