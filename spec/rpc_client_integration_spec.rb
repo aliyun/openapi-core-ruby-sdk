@@ -1,10 +1,11 @@
 require 'rspec'
-require 'rpc_client'
 require 'webmock/rspec'
+
+require "aliyunsdkcore"
 
 describe 'rpc request' do
 
-  WebMock.disable_net_connect!(allow: %r{ecs.aliyuncs.com})
+  WebMock.allow_net_connect!
 
   let(:rpc_client) do
     RPCClient.new(

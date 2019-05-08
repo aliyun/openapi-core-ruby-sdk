@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faraday', '~> 0.15.4'
   s.add_dependency 'activesupport', '>= 4.0.0'
 
-  s.add_development_dependency "simplecov"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "simplecov", ">= 0.16.1"
+  s.add_development_dependency "rspec", ">= 3.8.0"
   s.add_development_dependency "codecov", ">= 0.1.10"
 end
