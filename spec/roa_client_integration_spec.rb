@@ -1,10 +1,11 @@
 require 'rspec'
-require 'roa_client'
 require 'webmock/rspec'
+
+require 'aliyunsdkcore'
 
 describe 'roa request' do
 
-  WebMock.disable_net_connect!(allow: %r{ros.aliyuncs.com/regions})
+  WebMock.allow_net_connect!
 
   let(:roa_client) do
     ROAClient.new(
@@ -12,7 +13,7 @@ describe 'roa request' do
       api_version:       '2015-09-01',
       access_key_id:     ENV['ACCESS_KEY_ID'],
       access_key_secret: ENV['ACCESS_KEY_SECRET'],
-      )
+    )
   end
 
   it 'request' do

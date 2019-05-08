@@ -1,7 +1,8 @@
 .PHONY: test install build deploy
 
 test:
-	rspec --format doc
+	bundle exec rspec --format doc --exclude-pattern spec/**/*_integration_spec.rb
+	bundle exec rspec --format doc -P spec/**/*_integration_spec.rb
 
 deploy:
 	$(eval VERSION := $(shell cat lib/aliyunsdkcore.rb | grep 'VERSION = ' | cut -d\" -f2))

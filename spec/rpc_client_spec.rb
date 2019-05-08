@@ -1,10 +1,11 @@
 require 'rspec'
-require 'rpc_client'
 require 'webmock/rspec'
 
-describe 'rpc core' do
+require "aliyunsdkcore"
 
-  describe 'RPCClient' do
+describe 'RPCClient' do
+
+  describe 'initialize' do
     it 'should pass into "config"' do
       expect {
         RPCClient.new(nil)
