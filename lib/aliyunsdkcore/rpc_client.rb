@@ -3,15 +3,6 @@ require 'openssl'
 require 'faraday'
 require 'active_support/all'
 
-# Converts just the first character to uppercase.
-#
-#   upcase_first('what a Lovely Day') # => "What a Lovely Day"
-#   upcase_first('w')                 # => "W"
-#   upcase_first('')                  # => ""
-def upcase_first(string)
-  string.length > 0 ? string[0].upcase.concat(string[1..-1]) : ""
-end
-
 module AliyunSDKCore
 
   class RPCClient
@@ -68,6 +59,15 @@ module AliyunSDKCore
     end
 
     private
+
+    # Converts just the first character to uppercase.
+    #
+    #   upcase_first('what a Lovely Day') # => "What a Lovely Day"
+    #   upcase_first('w')                 # => "W"
+    #   upcase_first('')                  # => ""
+    def upcase_first(string)
+      string.length > 0 ? string[0].upcase.concat(string[1..-1]) : ""
+    end
 
     def connection(adapter = Faraday.default_adapter)
       Faraday.new(:url => self.endpoint) { |faraday| faraday.adapter adapter }
