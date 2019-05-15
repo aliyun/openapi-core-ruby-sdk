@@ -2,10 +2,6 @@ require 'faraday'
 require 'securerandom'
 require 'active_support/all'
 
-def present?(obj)
-  obj.respond_to?(:empty?) ? !obj.empty? : obj
-end
-
 module AliyunSDKCore
 
   class ROAClient
@@ -29,7 +25,7 @@ module AliyunSDKCore
 
       response = connection.send(method.downcase) do |request|
         request.url uri, params
-        if present?(body)
+        if body.try(:any?) || body
           request_body                  = body.to_json
           request.body                  = request_body
           mix_headers['content-md5']    = Digest::MD5.base64digest request_body
@@ -88,7 +84,7 @@ module AliyunSDKCore
         'x-acs-signature-version' => '1.0',
         'x-acs-version' =>           self.api_version,
         'x-sdk-client' =>            "RUBY(#{RUBY_VERSION})", # FIXME: 如何获取Gem的名称和版本号
-        'user-agent' => DEFAULT_UA
+        'user-agent' =>              DEFAULT_UA
       }
       if self.security_token
         default_headers.merge!(
