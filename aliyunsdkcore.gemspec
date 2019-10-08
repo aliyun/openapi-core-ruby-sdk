@@ -22,5 +22,5 @@ Gem::Specification.new do |s|
   s.require_paths      = ['lib']
 
   s.add_dependency 'activesupport', '>= 4.0.0'
-  s.add_dependency 'faraday'
+  s.add_dependency 'faraday', '>= 0.15.4'
 end
