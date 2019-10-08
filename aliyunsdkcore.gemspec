@@ -16,9 +16,7 @@ Gem::Specification.new do |s|
   s.summary            = 'Alibaba Cloud Ruby Core SDK'
   s.rubyforge_project  = 'aliyunsdkcore'
   s.license            = 'MIT'
-  s.files              = `git ls-files -z lib`.split("\0")
-  s.files += %w[README.md]
-  s.test_files         = `git ls-files -z spec`.split("\0")
+  s.files              = Dir['{lib}/**/*', 'LICENSE.md', 'README.md', 'README-CN.md', 'CHANGELOG.md']
   s.require_paths      = ['lib']
 
   s.add_dependency 'activesupport', '>= 4.0.0'
