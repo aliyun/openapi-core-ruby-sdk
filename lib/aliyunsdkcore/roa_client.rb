@@ -26,11 +26,17 @@ module AliyunSDKCore
 
       response = connection.send(method.downcase) do |request|
         request.url uri, params
-        if body.try(:any?) || body
-          request_body                  = body.to_json
-          request.body                  = request_body
+        if body
+          if mix_headers['content-type'].start_with? 'application/json'
+            request_body = body.to_json
+          elsif mix_headers['content-type'].start_with? 'application/x-www-form-urlencoded'
+            request_body = URI.encode_www_form(body)
+          else
+            request_body = body
+          end
           mix_headers['content-md5']    = Digest::MD5.base64digest request_body
           mix_headers['content-length'] = request_body.length.to_s
+          request.body                  = request_body
         end
         string2sign = string_to_sign(method, uri, mix_headers, params)
         mix_headers.merge!(authorization: authorization(string2sign))
