@@ -2,7 +2,7 @@ require 'aliyunsdkcore/rpc_client'
 require 'aliyunsdkcore/roa_client'
 
 module AliyunSDKCore
-  VERSION = "0.0.10"
+  VERSION = "0.0.11"
   DEFAULT_UA = "AlibabaCloud (#{Gem::Platform.local.os}; " +
     "#{Gem::Platform.local.cpu}) Ruby/#{RUBY_VERSION} Core/#{VERSION}"
 end
