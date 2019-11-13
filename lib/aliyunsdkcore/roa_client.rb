@@ -115,7 +115,7 @@ module AliyunSDKCore
     end
 
     def canonicalized_resource(uri, query_hash = {})
-      query_string = query_hash.map { |key, value| "#{key}=#{value}" }.join('&')
+      query_string = query_hash.sort.map { |key, value| "#{key}=#{value}" }.join('&')
       query_string.empty? ? uri : "#{uri}?#{query_string}"
     end
 
