@@ -1,6 +1,5 @@
 require 'faraday'
 require 'securerandom'
-require 'active_support/all'
 
 module AliyunSDKCore
 
@@ -21,7 +20,9 @@ module AliyunSDKCore
 
     def request(method:, uri:, params: {}, body: {}, headers: {}, options: {})
       # :"Content-Type" => "application/json" to "content-type" => "application/json"
-      headers.deep_transform_keys! { |key| key.to_s.downcase }
+      headers.each_with_object({}) do |(key, value), result|
+        result[key.to_s.downcase] = value
+      end
       mix_headers = default_headers.merge(headers)
 
       response = connection.send(method.downcase) do |request|
