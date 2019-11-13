@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   s.files              = Dir['{lib}/**/*', 'LICENSE.md', 'README.md', 'README-CN.md', 'CHANGELOG.md']
   s.require_paths      = ['lib']
 
-  s.add_dependency 'activesupport', '>= 4.0.0'
+  s.add_dependency 'activesupport', '>= 3.0.0'
   s.add_dependency 'faraday', '>= 0.15.4'
 end
