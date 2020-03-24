@@ -70,15 +70,15 @@ module AliyunSDKCore
     end
 
     def post(uri: '', headers: {}, params: {}, body: {}, options: {})
-      request(method: :get, uri: uri, params: params, body: body, headers: headers, options: options)
+      request(method: :post, uri: uri, params: params, body: body, headers: headers, options: options)
     end
 
     def put(uri: '', headers: {}, params: {}, body: {}, options: {})
-      request(method: :get, uri: uri, params: params, body: body, headers: headers, options: options)
+      request(method: :put, uri: uri, params: params, body: body, headers: headers, options: options)
     end
 
     def delete(uri: '', headers: {}, params: {}, options: {})
-      request(method: :get, uri: uri, params: params, body: {}, headers: headers, options: options)
+      request(method: :delete, uri: uri, params: params, body: {}, headers: headers, options: options)
     end
 
     def default_headers
