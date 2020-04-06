@@ -124,7 +124,7 @@ describe 'ROAClient' do
       it 'json response should ok' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: 200, headers: { 'Content-Type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.get(uri: '/')
+        response = roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         expect(response.body).to eq({ ok: true }.to_json)
       end
     end
@@ -133,7 +133,7 @@ describe 'ROAClient' do
       it 'json response should ok' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: 204, headers: { 'Content-Type': 'application/json' }, body: '')
-        response = roa_client.get(uri: '/')
+        response = roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         expect(response.body).to eq('')
       end
     end
@@ -146,7 +146,7 @@ describe 'ROAClient' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: status, headers: headers, body: body)
         expect {
-          roa_client.get(uri: '/')
+          roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         }.to raise_error(StandardError, 'code: 400, error message requestid: requestid')
       end
     end
@@ -167,7 +167,7 @@ describe 'ROAClient' do
       it 'xml response should ok' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: status, headers: headers, body: body)
-        response = roa_client.get(uri: '/')
+        response = roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         expect(response.body).to eq(body)
       end
     end
@@ -189,7 +189,7 @@ describe 'ROAClient' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: status, headers: headers, body: body)
         expect {
-          roa_client.get(uri: '/')
+          roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         }.to raise_error(ROAClient::ACSError, 'error message host_id: hostid, request_id: requestid')
       end
     end
@@ -197,40 +197,40 @@ describe 'ROAClient' do
     describe 'request(200) with plain response should ok' do
       it 'plain response should ok' do
         stub_request(:get, "https://ros.aliyuncs.com/").to_return(status: 200, body: 'plain text')
-        response = roa_client.get(uri: '/')
+        response = roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
         expect(response.body).to eq('plain text')
       end
     end
 
     describe 'post should ok' do
       it 'should ok' do
-        stub_request(:get, "https://ros.aliyuncs.com/")
+        stub_request(:post, "https://ros.aliyuncs.com/")
           .to_return(status: 200, headers: { 'content-type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.post(uri: '/', body: 'text')
+        response = roa_client.post(uri: '/', headers: { 'content-type': 'application/json' }, body: 'text')
         expect(response.body).to eq('{"ok":true}')
       end
       it 'should ok with query' do
-        stub_request(:get, "https://ros.aliyuncs.com/?k=v")
+        stub_request(:post, "https://ros.aliyuncs.com/?k=v")
           .to_return(status: 200, headers: { 'content-type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.post(uri: '/', params: { k: 'v' }, body: 'text')
+        response = roa_client.post(uri: '/', headers: { 'content-type': 'application/json' }, params: { k: 'v' }, body: 'text')
         expect(response.body).to eq('{"ok":true}')
       end
     end
 
     describe 'put should ok' do
       it 'should ok' do
-        stub_request(:get, "https://ros.aliyuncs.com/")
+        stub_request(:put, "https://ros.aliyuncs.com/")
           .to_return(status: 200, headers: { 'content-type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.put(uri: '/', body: 'text')
+        response = roa_client.put(uri: '/', headers: { 'content-type': 'application/json' }, body: 'text')
         expect(response.body).to eq('{"ok":true}')
       end
     end
 
     describe 'delete should ok' do
       it 'should ok' do
-        stub_request(:get, "https://ros.aliyuncs.com/")
+        stub_request(:delete, "https://ros.aliyuncs.com/")
           .to_return(status: 200, headers: { 'content-type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.delete(uri: '/')
+        response = roa_client.delete(uri: '/', headers: { 'content-type': 'application/json' })
         expect(response.body).to eq('{"ok":true}')
       end
     end

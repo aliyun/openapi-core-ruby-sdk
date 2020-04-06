@@ -17,8 +17,7 @@ install:
   - gem update --system
   - gem install bundler
   - gem install rspec
-
-before_install:
+  - bundle -v
   - bundle install
 
 script:
