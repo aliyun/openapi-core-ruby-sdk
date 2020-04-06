@@ -221,7 +221,7 @@ describe 'ROAClient' do
       it 'should ok' do
         stub_request(:get, "https://ros.aliyuncs.com/")
           .to_return(status: 200, headers: { 'content-type': 'application/json' }, body: { ok: true }.to_json)
-        response = roa_client.put(uri: '/', body: 'text')
+        response = roa_client.put(uri: '/', body: 'text', headers: {'Content-Type': 'application/json'})
         expect(response.body).to eq('{"ok":true}')
       end
     end
