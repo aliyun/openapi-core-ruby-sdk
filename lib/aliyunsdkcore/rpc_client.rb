@@ -88,6 +88,7 @@ module AliyunSDKCore
     end
 
     def encode(string)
+      string = string.to_s unless string.is_a?(String)
       encoded = CGI.escape string
       encoded.gsub(/[\+]/, '%20')
     end
