@@ -167,6 +167,14 @@ describe 'RPCClient' do
         rpc_client.request(action: 'action')
       }.to raise_error(StandardError, /error message, URL:/)
     end
+
+    it 'request with no problem should be ok' do
+      mock_response = { Code: "" }.to_json
+      stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 200, body: mock_response)
+      expect {
+        rpc_client.request(action: 'action')
+      }.to_not raise_error(StandardError)
+    end
   end
 
   describe 'RPC private methods' do

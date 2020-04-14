@@ -51,7 +51,7 @@ module AliyunSDKCore
       end
 
       response_body = JSON.parse(response.body)
-      if response_body['Code'] && !self.codes.include?(response_body['Code'])
+      if response_body['Code'] && !response_body['Code'].to_s.empty? && !self.codes.include?(response_body['Code'])
         raise StandardError, "#{response_body['Message']}, URL: #{uri}"
       end
 
