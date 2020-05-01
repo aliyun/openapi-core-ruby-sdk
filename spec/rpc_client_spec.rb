@@ -165,7 +165,7 @@ describe 'RPCClient' do
       stub_request(:get, /https:\/\/ecs.aliyuncs.com/).to_return(status: 400, body: mock_response)
       expect {
         rpc_client.request(action: 'action')
-      }.to raise_error(StandardError, /error message, URL:/)
+      }.to raise_error(StandardError, /Code: 400, Message: error message, URL:/)
     end
 
     it 'request with no problem should be ok' do
