@@ -26,10 +26,16 @@ module AliyunSDKCore
 
       response = connection.send(method.downcase) do |request|
         request.url uri, params
-        if body
-          if mix_headers['content-type'].start_with? 'application/json'
+
+        request.options.timeout      = options[:timeout]      if options[:timeout]
+        request.options.open_timeout = options[:open_timeout] if options[:open_timeout]
+        request.options.read_timeout = options[:read_timeout] if options[:read_timeout]
+        request.options.write_timeout = options[:write_timeout] if options[:write_timeout]
+
+        if !body.nil? && body != {} && body != [] && body != ''
+          if mix_headers['content-type'].to_s.start_with? 'application/json'
             request_body = body.to_json
-          elsif mix_headers['content-type'].start_with? 'application/x-www-form-urlencoded'
+          elsif mix_headers['content-type'].to_s.start_with? 'application/x-www-form-urlencoded'
             request_body = URI.encode_www_form(body)
           else
             request_body = body
