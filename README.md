@@ -19,6 +19,9 @@ Alibaba Cloud Core SDK for Ruby allows you to access Alibaba Cloud services such
 
 This document introduces how to install and use Alibaba Cloud Core SDK for Ruby.
 
+## Troubleshoot
+[Troubleshoot](https://troubleshoot.api.aliyun.com/?source=github_sdk) Provide OpenAPI diagnosis service to help developers locate quickly and provide solutions for developers through `RequestID` or `error message`.
+
 ## Installation
 
 ```sh
