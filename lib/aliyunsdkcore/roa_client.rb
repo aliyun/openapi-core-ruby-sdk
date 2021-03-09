@@ -1,6 +1,14 @@
 require 'faraday'
 require 'securerandom'
 require 'active_support/all'
+require 'net/http'
+
+module Net::HTTPHeader
+  def capitalize(name)
+    name
+  end
+  private :capitalize
+end
 
 module AliyunSDKCore
 
