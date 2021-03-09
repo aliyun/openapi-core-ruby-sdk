@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.description        = 'Alibaba Cloud Ruby Core SDK'
   s.homepage           = 'http://www.alibabacloud.com/'
   s.summary            = 'Alibaba Cloud Ruby Core SDK'
-  s.rubyforge_project  = 'aliyunsdkcore'
   s.license            = 'MIT'
   s.files              = Dir['{lib}/**/*', 'LICENSE.md', 'README.md', 'README-CN.md', 'CHANGELOG.md']
   s.require_paths      = ['lib']
