@@ -32,4 +32,9 @@ describe 'roa request' do
     expect(response.body.instance_of? String).to be true
   end
 
+  it 'support timeout' do
+    expect {
+      roa_client.request(method: 'GET', uri: '/regions', options: { timeout: 0.002, open_timeout: 0.002 })
+    }.to raise_error(Faraday::ConnectionFailed)
+  end
 end
