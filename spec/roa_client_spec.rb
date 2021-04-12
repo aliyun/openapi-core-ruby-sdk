@@ -147,7 +147,7 @@ describe 'ROAClient' do
           .to_return(status: status, headers: headers, body: body)
         expect {
           roa_client.get(uri: '/', headers: { 'content-type': 'application/json' })
-        }.to raise_error(StandardError, 'code: 400, error message requestid: requestid')
+        }.to raise_error(StandardError, 'status: 400, code: errorcode, message: error message, requestid: requestid')
       end
     end
 

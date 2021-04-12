@@ -56,8 +56,8 @@ module AliyunSDKCore
       response_content_type = response.headers['Content-Type'] || ''
       if response_content_type.start_with?('application/json')
         if response.status >= 400
-          result = JSON.parse(response.body)
-          raise StandardError, "code: #{response.status}, #{result['Message']} requestid: #{result['RequestId']}"
+          result = JSON.parse(response.body).transform_keys(&:downcase)
+          raise StandardError, "status: #{response.status}, code: #{result['code']}, message: #{result['message']}, requestid: #{result['requestid']}"
         end
       end
 
