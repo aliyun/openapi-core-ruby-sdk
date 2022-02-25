@@ -35,9 +35,9 @@ module AliyunSDKCore
       response = connection.send(method.downcase) do |request|
         request.url uri, params
         if body
-          if mix_headers['content-type'].start_with? 'application/json'
+          if mix_headers['content-type']&.start_with? 'application/json'
             request_body = body.to_json
-          elsif mix_headers['content-type'].start_with? 'application/x-www-form-urlencoded'
+          elsif mix_headers['content-type']&.start_with? 'application/x-www-form-urlencoded'
             request_body = URI.encode_www_form(body)
           else
             request_body = body

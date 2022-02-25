@@ -17,7 +17,7 @@ English | [简体中文](./README-CN.md)
 
 Alibaba Cloud Core SDK for Ruby allows you to access Alibaba Cloud services such as Elastic Compute Service (ECS), Server Load Balancer (SLB), and CloudMonitor. You can access Alibaba Cloud services without the need to handle API related tasks, such as signing and constructing your requests.
 
-This document introduces how to install and use Alibaba Cloud Core SDK for Ruby.
+This document introduce how to install and use Alibaba Cloud Core SDK for Ruby.
 
 ## Troubleshoot
 [Troubleshoot](https://troubleshoot.api.aliyun.com/?source=github_sdk) Provide OpenAPI diagnosis service to help developers locate quickly and provide solutions for developers through `RequestID` or `error message`.
